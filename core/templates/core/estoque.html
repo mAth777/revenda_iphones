@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque de iPhones</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://blogdosuperapple.com.br/wp-content/uploads/2023/06/macOS-Sonoma-default-wallpaper-Light-2048x2048.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 50px;
+        }
+        .card-deck .card {
+            min-width: 220px;
+        }
+        .card-title {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1.1em;
+        }
+        .btn-warning, .btn-danger {
+            margin: 5px;
+        }
+        .text-center .btn {
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Estoque de iPhones</h2>
+
+        {% if iphones %}
+            <div class="card-deck mt-4">
+                {% for iphone in iphones %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ iphone.modelo }}</h5>
+                            <p class="card-text">
+                                <strong>Condição:</strong> {{ iphone.condicao }}<br>
+                                <strong>Memória:</strong> {{ iphone.memoria_interna }}<br>
+                                <strong>Cor:</strong> {{ iphone.cor }}<br>
+                                {% if iphone.condicao != 'Novo' %}
+                                    <strong>Saúde da Bateria:</strong> {{ iphone.saude_bateria }}%<br>
+                                {% endif %}
+                                <strong>Preço de Venda:</strong> R$ {{ iphone.preco_venda }}<br>
+                                <strong>Data de Cadastro:</strong> {{ iphone.created_at|date:"d/m/Y H:i" }}
+                            </p>
+                            <div class="text-center">
+                                <a href="{% url 'editar_iphone' iphone.id %}" class="btn btn-warning">Editar</a>
+                                <a href="{% url 'remover_iphone' iphone.id %}" class="btn btn-danger">Remover</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info mt-4">Nenhum iPhone no estoque.</div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{% url 'cadastrar_iphone' %}" class="btn btn-primary">Cadastrar Novo iPhone</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

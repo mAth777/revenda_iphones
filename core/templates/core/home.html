@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .background-image {
+            background-image: url('https://www.apple.com/v/iphone/buy/l/images/meta/iphone_buy__chvehwtfgamq_og.jpg?202404051012'); /* Substitua pela URL da sua imagem */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-form {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-image">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 login-form">
+                    <h1 class="text-center">Bem-vindo à Revenda de iPhones</h1>
+                    <p class="text-center">Faça login para continuar</p>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="text-center">Login</h2>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{% url 'home' %}">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                            </form>
+                            <div class="text-center mt-3">
+                                <a href="{% url 'register' %}">Cadastrar-se</a>
+                                <br>
+                                <a href="{% url 'password_reset' %}">Esqueci minha senha</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if messages %}
+                        <div class="alert alert-info mt-3">
+                            <ul class="mb-0">
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar iPhones</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://blogdosuperapple.com.br/wp-content/uploads/2023/06/macOS-Sonoma-default-wallpaper-Light-2048x2048.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 50px;
+        }
+        .card-deck .card {
+            min-width: 220px;
+        }
+        .card-title {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1.1em;
+        }
+        .btn-warning, .btn-danger {
+            margin: 5px;
+        }
+        .text-center .btn {
+            width: 48%;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modeloField = document.getElementById('id_modelo');
+            const saudeBateriaField = document.getElementById('saude-bateria');
+            
+            function toggleSaudeBateria() {
+                const modelo = modeloField.value;
+                const modelosNovos = ['iPhone 13', 'iPhone 13 Mini', 'iPhone 13 Pro', 'iPhone 13 Pro Max',
+                                      'iPhone 14', 'iPhone 14 Plus', 'iPhone 14 Pro', 'iPhone 14 Pro Max',
+                                      'iPhone 15', 'iPhone 15 Plus', 'iPhone 15 Pro', 'iPhone 15 Pro Max'];
+                if (modelosNovos.includes(modelo)) {
+                    saudeBateriaField.style.display = 'none';
+                } else {
+                    saudeBateriaField.style.display = 'block';
+                }
+            }
+            
+            modeloField.addEventListener('change', toggleSaudeBateria);
+            
+            toggleSaudeBateria(); // Initial call on page load
+        });
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Buscar iPhones</h2>
+
+        <form method="GET" action="{% url 'buscar_iphones' %}">
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="id_modelo">Modelo</label>
+                    <select id="id_modelo" name="modelo" class="form-control">
+                        <option value="">Todos</option>
+                        {% for modelo in form.fields.modelo.choices %}
+                            <option value="{{ modelo.0 }}">{{ modelo.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="id_condicao">Condição</label>
+                    <select id="id_condicao" name="condicao" class="form-control">
+                        <option value="">Todas</option>
+                        {% for condicao in form.fields.condicao.choices %}
+                            <option value="{{ condicao.0 }}">{{ condicao.0 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="id_memoria_interna">Memória Interna (GB)</label>
+                    <select id="id_memoria_interna" name="memoria_interna" class="form-control">
+                        <option value="">Todas</option>
+                        {% for memoria in form.fields.memoria_interna.choices %}
+                            <option value="{{ memoria.0 }}">{{ memoria.0 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="id_cor">Cor</label>
+                    <input type="text" id="id_cor" name="cor" class="form-control">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Buscar</button>
+        </form>
+
+        {% if iphones %}
+            <div class="card-deck mt-4">
+                {% for iphone in iphones %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ iphone.modelo }}</h5>
+                            <p class="card-text">
+                                <strong>Condição:</strong> {{ iphone.condicao }}<br>
+                                <strong>Memória:</strong> {{ iphone.memoria_interna }}<br>
+                                <strong>Cor:</strong> {{ iphone.cor }}<br>
+                                {% if iphone.condicao != 'Novo' %}
+                                    <strong>Saúde da Bateria:</strong> {{ iphone.saude_bateria }}%<br>
+                                {% endif %}
+                                <strong>Preço de Venda:</strong> R$ {{ iphone.preco_venda }}<br>
+                                <strong>Fornecedor:</strong> {{ iphone.fornecedor.nome_completo }}<br>
+                                <strong>Loja:</strong> {{ iphone.fornecedor.nome_da_loja }}<br>
+                                <strong>Data de Cadastro:</strong> {{ iphone.created_at|date:"d/m/Y" }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info mt-4">Nenhum iPhone encontrado.</div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Voltar</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

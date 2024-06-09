@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remover iPhone</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center text-danger">Remover iPhone</h2>
+        <p class="text-center">Tem certeza que deseja remover este iPhone?</p>
+
+        <div class="card">
+            <div class="card-body">
+                <p><strong>Modelo:</strong> {{ iphone.modelo }}</p>
+                <p><strong>Condição:</strong> {{ iphone.condicao }}</p>
+                <p><strong>Memória:</strong> {{ iphone.memoria_interna }}</p>
+                <p><strong>Cor:</strong> {{ iphone.cor }}</p>
+                <p><strong>Saúde da Bateria:</strong> {{ iphone.saude_bateria }}%</p>
+                <p><strong>Preço:</strong> R$ {{ iphone.preco_venda }}</p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-block">Remover</button>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="{% url 'estoque' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
