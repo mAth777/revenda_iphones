@@ -6,37 +6,123 @@
     <title>Cadastrar-se</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-image: url('https://blogdosuperapple.com.br/wp-content/uploads/2023/06/macOS-Sonoma-default-wallpaper-Light-2048x2048.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function formatarTelefone(element) {
+            var v = element.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            v = v.replace(/^(\d{2})(\d)/g, '($1) $2'); // Coloca parênteses no DDD
+            v = v.replace(/(\d)(\d{4})$/, '$1-$2'); // Coloca hífen no número
+            element.value = v;
+        }
+
+        function formatarCPF(element) {
+            var v = element.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            v = v.replace(/(\d{3})(\d)/, '$1.$2');
+            v = v.replace(/(\d{3})(\d)/, '$1.$2');
+            v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            element.value = v;
+        }
+
+        function formatarCEP(element) {
+            var v = element.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+            v = v.replace(/(\d{5})(\d)/, '$1-$2');
+            element.value = v;
+        }
+
+        function buscarEndereco(cep) {
+            if (cep.length != 9) return;
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.querySelector('input[name="logradouro"]').value = data.logradouro;
+                        document.querySelector('input[name="bairro"]').value = data.bairro;
+                        document.querySelector('input[name="cidade"]').value = data.localidade;
+                        document.querySelector('input[name="uf"]').value = data.uf;
+                    } else {
+                        alert("CEP não encontrado!");
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar endereço:', error);
+                    alert("Erro ao buscar o endereço. Tente novamente.");
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var telefoneInput = document.querySelector('input[name="telefone"]');
+            var cpfInput = document.querySelector('input[name="cpf_cnpj"]');
+            var cepInput = document.querySelector('input[name="cep"]');
+
+            telefoneInput.addEventListener('input', function() {
+                formatarTelefone(telefoneInput);
+            });
+
+            cpfInput.addEventListener('input', function() {
+                formatarCPF(cpfInput);
+            });
+
+            cepInput.addEventListener('input', function() {
+                formatarCEP(cepInput);
+            });
+
+            cepInput.addEventListener('blur', function() {
+                buscarEndereco(cepInput.value);
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="text-center">Cadastrar-se</h2>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{% url 'register' %}">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
-                        </form>
-                        <div class="text-center mt-3">
-                            <a href="{% url 'home' %}">Voltar para Login</a>
-                        </div>
-                    </div>
-                </div>
-
-                {% if messages %}
-                    <div class="alert alert-info mt-3">
-                        <ul class="mb-0">
-                            {% for message in messages %}
-                                <li>{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
+        <h2 class="text-center mb-4">Cadastrar-se</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                {{ form.as_p }}
             </div>
+            <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+        </form>
+        <div class="text-center">
+            <a href="{% url 'home' %}" class="btn btn-secondary">Voltar para a Página Inicial</a>
         </div>
     </div>
 
